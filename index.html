@@ -8,21 +8,26 @@
         body{
             text-align:center;
             font-family:Arial;
-            background:#f4f4f4;
+            background:#ffdcf9;
         }
 
         canvas{
-            border:2px solid black;
+            border:2px solid rgb(90, 6, 76);
+            background:rgb(255, 226, 245);
+        }
+
+        button { margin:5px; padding:8px 14px; cursor:pointer; }
+        input { width:60px; }
+        #panel {
+            display:inline-block;
+            margin-top:15px;
+            padding:15px 25px;
             background:white;
-        }
-
-        button{
-            margin:10px;
-            padding:10px;
-        }
-
-        input{
-            width:60px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            text-align:left;
+            font-family:monospace;
+            font-size:14px;
         }
     </style>
 </head>
@@ -47,6 +52,8 @@ Ymax: <input type="number" id="ymax" value="350">
 <button onclick="anteriorEscena()" title="Anterior">&lt;</button>
 <button onclick="siguienteEscena()" title="Siguiente">&gt;</button>
 <button onclick="ultimaEscena()" title="Última">&gt;|</button>
+
+
 <div style="
     display:inline-block;
     margin-top:15px;

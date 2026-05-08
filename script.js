@@ -47,158 +47,65 @@ const escenas = [
 
 let escenaActual = 0;
 
-function siguienteEscena(){
-
-    escenaActual++;
-
-    if(escenaActual >= escenas.length){
-        escenaActual = 0;
-    }
-
-    dibujarEscena();
-}
-
-function anteriorEscena(){
-
-    escenaActual--;
-
-    if(escenaActual < 0){
-        escenaActual = escenas.length - 1;
-    }
-
-    dibujarEscena();
-}
 function primeraEscena() {
     escenaActual = 0;
     dibujarEscena();
 }
-
 function ultimaEscena() {
     escenaActual = escenas.length - 1;
     dibujarEscena();
 }
+
+function siguienteEscena() {
+            escenaActual = (escenaActual + 1) % escenas.length;
+            dibujarEscena();
+        }
+
+function anteriorEscena() {
+            escenaActual = (escenaActual - 1 + escenas.length) % escenas.length;
+            dibujarEscena();
+        }
+
 const INSIDE = 0;
 const LEFT = 1;
 const RIGHT = 2;
 const BOTTOM = 4;
 const TOP = 8;
-function obtenerCodigo(x, y, xmin, ymin, xmax, ymax){
 
-    let codigo = INSIDE;
-
-    if(x < xmin){
-        codigo |= LEFT;
-    }
-
-    else if(x > xmax){
-        codigo |= RIGHT;
-    }
-
-    if(y < ymin){
-        codigo |= TOP;
-    }
-
-    else if(y > ymax){
-        codigo |= BOTTOM;
-    }
-
-    return codigo;
-}
-function cohenSutherland(x1, y1, x2, y2, xmin, ymin, xmax, ymax){
-
-    let codigo1 = obtenerCodigo(x1, y1, xmin, ymin, xmax, ymax);
-
-    let codigo2 = obtenerCodigo(x2, y2, xmin, ymin, xmax, ymax);
-
-    let aceptar = false;
-
-    while(true){
-
-        if((codigo1 | codigo2) === 0){
-
-            aceptar = true;
-            break;
+function obtenerCodigo(x, y, xmin, ymin, xmax, ymax) {
+            let c = INSIDE;
+            if (x < xmin) c |= LEFT;
+            else if (x > xmax) c |= RIGHT;
+            if (y < ymin) c |= TOP;
+            else if (y > ymax) c |= BOTTOM;
+            return c;
         }
 
-        else if((codigo1 & codigo2) !== 0){
+ function cohenSutherland(x1, y1, x2, y2, xmin, ymin, xmax, ymax) {
+            let c1 = obtenerCodigo(x1, y1, xmin, ymin, xmax, ymax);
+            let c2 = obtenerCodigo(x2, y2, xmin, ymin, xmax, ymax);
+            let aceptar = false;
 
-            break;
+
+    while (true) {
+                if ((c1 | c2) === 0) { aceptar = true; break; }
+                else if ((c1 & c2) !== 0) { break; }
+                else {
+                    let x, y;
+                    let cFuera = c1 !== 0 ? c1 : c2;
+
+                    if (cFuera & TOP)         { x = x1 + (x2-x1)*(ymin-y1)/(y2-y1); y = ymin; }
+                    else if (cFuera & BOTTOM) { x = x1 + (x2-x1)*(ymax-y1)/(y2-y1); y = ymax; }
+                    else if (cFuera & RIGHT)  { y = y1 + (y2-y1)*(xmax-x1)/(x2-x1); x = xmax; }
+                    else if (cFuera & LEFT)   { y = y1 + (y2-y1)*(xmin-x1)/(x2-x1); x = xmin; }
+
+                    if (cFuera === c1) { x1 = x; y1 = y; c1 = obtenerCodigo(x1, y1, xmin, ymin, xmax, ymax); }
+                    else               { x2 = x; y2 = y; c2 = obtenerCodigo(x2, y2, xmin, ymin, xmax, ymax); }
+                }
+            }
+            return { aceptar, x1, y1, x2, y2 };
         }
 
-        else{
-
-            let x, y;
-
-            let codigoFuera = codigo1 !== 0 ? codigo1 : codigo2;
-
-            if(codigoFuera & TOP){
-
-                x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
-
-                y = ymin;
-            }
-
-            else if(codigoFuera & BOTTOM){
-
-                x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
-
-                y = ymax;
-            }
-
-            else if(codigoFuera & RIGHT){
-
-                y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
-
-                x = xmax;
-            }
-
-            else if(codigoFuera & LEFT){
-
-                y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
-
-                x = xmin;
-            }
-
-            if(codigoFuera === codigo1){
-
-                x1 = x;
-                y1 = y;
-
-                codigo1 = obtenerCodigo(
-                    x1,
-                    y1,
-                    xmin,
-                    ymin,
-                    xmax,
-                    ymax
-                );
-            }
-
-            else{
-
-                x2 = x;
-                y2 = y;
-
-                codigo2 = obtenerCodigo(
-                    x2,
-                    y2,
-                    xmin,
-                    ymin,
-                    xmax,
-                    ymax
-                );
-            }
-        }
-    }
-
-    return {
-        aceptar,
-        x1,
-        y1,
-        x2,
-        y2
-    };
-}
 function dibujarEscena(){
 
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -228,21 +135,27 @@ function dibujarEscena(){
         linea.y2,
         "gray"
     );
+    const res = cohenSutherland(linea.x1, linea.y1, linea.x2, linea.y2, xmin, ymin, xmax, ymax);
 
-    document.getElementById("info-original").textContent =
-        `p1: (${linea.x1}, ${linea.y1})   p2: (${linea.x2}, ${linea.y2})`;
-
-    if (resultado.aceptar) {
-        document.getElementById("info-recorte").textContent =
-            `pc1: (${Math.round(resultado.x1)}, ${Math.round(resultado.y1)})   pc2: (${Math.round(resultado.x2)}, ${Math.round(resultado.y2)})`;
-        document.getElementById("info-estado").textContent = "Visible (recortada o dentro)";
-        document.getElementById("info-estado").style.color = "green";
-    } else {
-        document.getElementById("info-recorte").textContent = "—";
-        document.getElementById("info-estado").textContent = "Completamente fuera (rechazada)";
-        document.getElementById("info-estado").style.color = "red";
-    }
-
+     if (res.aceptar) {
+         dibujarLinea(res.x1, res.y1, res.x2, res.y2, "green");
+         dibujarLinea(linea.x1, linea.y1, res.x1, res.y1, "red");
+         dibujarLinea(res.x2, res.y2, linea.x2, linea.y2, "red");
+         }
     document.getElementById("info-escena").textContent =
-        `Escena ${escenaActual + 1} de ${escenas.length}`;
+                `${escenaActual + 1} de ${escenas.length}`;
+            document.getElementById("info-original").textContent =
+                `p1: (${linea.x1}, ${linea.y1})    p2: (${linea.x2}, ${linea.y2})`;
+
+            if (res.aceptar) {
+                document.getElementById("info-recorte").textContent =
+                    `pc1: (${Math.round(res.x1)}, ${Math.round(res.y1)})    pc2: (${Math.round(res.x2)}, ${Math.round(res.y2)})`;
+                document.getElementById("info-estado").textContent = "✅ Visible";
+                document.getElementById("info-estado").style.color = "green";
+            } else {
+                document.getElementById("info-recorte").textContent = "—";
+                document.getElementById("info-estado").textContent = "❌ Completamente fuera";
+                document.getElementById("info-estado").style.color = "red";
+            }
+        }
 dibujarEscena();
