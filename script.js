@@ -88,3 +88,8 @@ function anteriorEscena(){
 
     dibujarEscena();
 }
+const INSIDE = 0;
+const LEFT = 1;
+const RIGHT = 2;
+const BOTTOM = 4;
+const TOP = 8;
