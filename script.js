@@ -65,3 +65,26 @@ const escenas = [
     }
 
 ];
+let escenaActual = 0;
+
+function siguienteEscena(){
+
+    escenaActual++;
+
+    if(escenaActual >= escenas.length){
+        escenaActual = 0;
+    }
+
+    dibujarEscena();
+}
+
+function anteriorEscena(){
+
+    escenaActual--;
+
+    if(escenaActual < 0){
+        escenaActual = escenas.length - 1;
+    }
+
+    dibujarEscena();
+}
