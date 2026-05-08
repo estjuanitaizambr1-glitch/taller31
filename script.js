@@ -1,6 +1,16 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+function transformarCoordenadas() {
 
+    ctx.setTransform(
+        1,   // escala X
+        0,
+        0,
+        -1,  // invierte Y
+        0,
+        canvas.height
+    );
+}
 function dibujarViewport(xmin, ymin, xmax, ymax){
 
     ctx.strokeStyle = "black";
@@ -76,8 +86,8 @@ function obtenerCodigo(x, y, xmin, ymin, xmax, ymax) {
             let c = INSIDE;
             if (x < xmin) c |= LEFT;
             else if (x > xmax) c |= RIGHT;
-            if (y < ymin) c |= TOP;
-            else if (y > ymax) c |= BOTTOM;
+            if (y < ymin) c |= BOTTOM;
+            else if (y > ymax) c |= TOP;
             return c;
         }
 
@@ -94,8 +104,8 @@ function obtenerCodigo(x, y, xmin, ymin, xmax, ymax) {
                     let x, y;
                     let cFuera = c1 !== 0 ? c1 : c2;
 
-                    if (cFuera & TOP)         { x = x1 + (x2-x1)*(ymin-y1)/(y2-y1); y = ymin; }
-                    else if (cFuera & BOTTOM) { x = x1 + (x2-x1)*(ymax-y1)/(y2-y1); y = ymax; }
+                    if (cFuera & TOP)         { x = x1 + (x2-x1)*(ymax-y1)/(y2-y1); y = ymax; }
+                    else if (cFuera & BOTTOM) { x = x1 + (x2-x1)*(ymin-y1)/(y2-y1); y = ymin; }
                     else if (cFuera & RIGHT)  { y = y1 + (y2-y1)*(xmax-x1)/(x2-x1); x = xmax; }
                     else if (cFuera & LEFT)   { y = y1 + (y2-y1)*(xmin-x1)/(x2-x1); x = xmin; }
 
@@ -108,7 +118,11 @@ function obtenerCodigo(x, y, xmin, ymin, xmax, ymax) {
 
 function dibujarEscena(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.setTransform(1,0,0,1,0,0);
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        transformarCoordenadas();
 
     const xmin = parseInt(document.getElementById("xmin").value);
 
