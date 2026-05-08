@@ -32,32 +32,21 @@
 
     <canvas id="canvas" width="800" height="500"></canvas>
 
-   <br><br>
+  
+Xmin: <input type="number" id="xmin" value="200">
+Ymin: <input type="number" id="ymin" value="150">
+Xmax: <input type="number" id="xmax" value="600">
+Ymax: <input type="number" id="ymax" value="350">
 
-Xmin:
-<input type="number" id="xmin" value="200">
+<button onclick="dibujarEscena()">Actualizar</button>
 
-Ymin:
-<input type="number" id="ymin" value="150">
-
-Xmax:
-<input type="number" id="xmax" value="600">
-
-Ymax:
-<input type="number" id="ymax" value="350">
-
-<button onclick="dibujarEscena()">
-    Dibujar
-</button>
 <br><br>
 
-<button onclick="anteriorEscena()">
-    Anterior
-</button>
-
-<button onclick="siguienteEscena()">
-    Siguiente
-</button>
+<!-- 4 botones de navegación como pide el enunciado -->
+<button onclick="primeraEscena()" title="Primera">|&lt;</button>
+<button onclick="anteriorEscena()" title="Anterior">&lt;</button>
+<button onclick="siguienteEscena()" title="Siguiente">&gt;</button>
+<button onclick="ultimaEscena()" title="Última">&gt;|</button>
 <div style="
     display:inline-block;
     margin-top:15px;
