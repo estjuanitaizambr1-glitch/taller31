@@ -93,3 +93,25 @@ const LEFT = 1;
 const RIGHT = 2;
 const BOTTOM = 4;
 const TOP = 8;
+function obtenerCodigo(x, y, xmin, ymin, xmax, ymax){
+
+    let codigo = INSIDE;
+
+    if(x < xmin){
+        codigo |= LEFT;
+    }
+
+    else if(x > xmax){
+        codigo |= RIGHT;
+    }
+
+    if(y < ymin){
+        codigo |= TOP;
+    }
+
+    else if(y > ymax){
+        codigo |= BOTTOM;
+    }
+
+    return codigo;
+}
