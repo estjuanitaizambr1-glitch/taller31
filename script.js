@@ -210,3 +210,76 @@ function cohenSutherland(x1, y1, x2, y2, xmin, ymin, xmax, ymax){
         y2
     };
 }
+function dibujarEscena(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const xmin = parseInt(document.getElementById("xmin").value);
+
+    const ymin = parseInt(document.getElementById("ymin").value);
+
+    const xmax = parseInt(document.getElementById("xmax").value);
+
+    const ymax = parseInt(document.getElementById("ymax").value);
+
+    dibujarViewport(
+        xmin,
+        ymin,
+        xmax,
+        ymax
+    );
+
+    const linea = escenas[escenaActual];
+
+    // LINEA ORIGINAL
+    dibujarLinea(
+        linea.x1,
+        linea.y1,
+        linea.x2,
+        linea.y2,
+        "gray"
+    );
+
+    const resultado = cohenSutherland(
+        linea.x1,
+        linea.y1,
+        linea.x2,
+        linea.y2,
+        xmin,
+        ymin,
+        xmax,
+        ymax
+    );
+
+    // PARTE VISIBLE
+    if(resultado.aceptar){
+
+        dibujarLinea(
+            resultado.x1,
+            resultado.y1,
+            resultado.x2,
+            resultado.y2,
+            "green"
+        );
+
+        // PARTE RECORTADA
+
+        dibujarLinea(
+            linea.x1,
+            linea.y1,
+            resultado.x1,
+            resultado.y1,
+            "red"
+        );
+
+        dibujarLinea(
+            resultado.x2,
+            resultado.y2,
+            linea.x2,
+            linea.y2,
+            "red"
+        );
+    }
+}
+
+dibujarEscena();
