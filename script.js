@@ -240,46 +240,20 @@ function dibujarEscena(){
         "gray"
     );
 
-    const resultado = cohenSutherland(
-        linea.x1,
-        linea.y1,
-        linea.x2,
-        linea.y2,
-        xmin,
-        ymin,
-        xmax,
-        ymax
-    );
+    document.getElementById("info-original").textContent =
+        `p1: (${linea.x1}, ${linea.y1})   p2: (${linea.x2}, ${linea.y2})`;
 
-    // PARTE VISIBLE
-    if(resultado.aceptar){
-
-        dibujarLinea(
-            resultado.x1,
-            resultado.y1,
-            resultado.x2,
-            resultado.y2,
-            "green"
-        );
-
-        // PARTE RECORTADA
-
-        dibujarLinea(
-            linea.x1,
-            linea.y1,
-            resultado.x1,
-            resultado.y1,
-            "red"
-        );
-
-        dibujarLinea(
-            resultado.x2,
-            resultado.y2,
-            linea.x2,
-            linea.y2,
-            "red"
-        );
+    if (resultado.aceptar) {
+        document.getElementById("info-recorte").textContent =
+            `pc1: (${Math.round(resultado.x1)}, ${Math.round(resultado.y1)})   pc2: (${Math.round(resultado.x2)}, ${Math.round(resultado.y2)})`;
+        document.getElementById("info-estado").textContent = "Visible (recortada o dentro)";
+        document.getElementById("info-estado").style.color = "green";
+    } else {
+        document.getElementById("info-recorte").textContent = "—";
+        document.getElementById("info-estado").textContent = "Completamente fuera (rechazada)";
+        document.getElementById("info-estado").style.color = "red";
     }
-}
 
+    document.getElementById("info-escena").textContent =
+        `Escena ${escenaActual + 1} de ${escenas.length}`;
 dibujarEscena();
