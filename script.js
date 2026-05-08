@@ -115,3 +115,98 @@ function obtenerCodigo(x, y, xmin, ymin, xmax, ymax){
 
     return codigo;
 }
+function cohenSutherland(x1, y1, x2, y2, xmin, ymin, xmax, ymax){
+
+    let codigo1 = obtenerCodigo(x1, y1, xmin, ymin, xmax, ymax);
+
+    let codigo2 = obtenerCodigo(x2, y2, xmin, ymin, xmax, ymax);
+
+    let aceptar = false;
+
+    while(true){
+
+        if((codigo1 | codigo2) === 0){
+
+            aceptar = true;
+            break;
+        }
+
+        else if((codigo1 & codigo2) !== 0){
+
+            break;
+        }
+
+        else{
+
+            let x, y;
+
+            let codigoFuera = codigo1 !== 0 ? codigo1 : codigo2;
+
+            if(codigoFuera & TOP){
+
+                x = x1 + (x2 - x1) * (ymin - y1) / (y2 - y1);
+
+                y = ymin;
+            }
+
+            else if(codigoFuera & BOTTOM){
+
+                x = x1 + (x2 - x1) * (ymax - y1) / (y2 - y1);
+
+                y = ymax;
+            }
+
+            else if(codigoFuera & RIGHT){
+
+                y = y1 + (y2 - y1) * (xmax - x1) / (x2 - x1);
+
+                x = xmax;
+            }
+
+            else if(codigoFuera & LEFT){
+
+                y = y1 + (y2 - y1) * (xmin - x1) / (x2 - x1);
+
+                x = xmin;
+            }
+
+            if(codigoFuera === codigo1){
+
+                x1 = x;
+                y1 = y;
+
+                codigo1 = obtenerCodigo(
+                    x1,
+                    y1,
+                    xmin,
+                    ymin,
+                    xmax,
+                    ymax
+                );
+            }
+
+            else{
+
+                x2 = x;
+                y2 = y;
+
+                codigo2 = obtenerCodigo(
+                    x2,
+                    y2,
+                    xmin,
+                    ymin,
+                    xmax,
+                    ymax
+                );
+            }
+        }
+    }
+
+    return {
+        aceptar,
+        x1,
+        y1,
+        x2,
+        y2
+    };
+}
